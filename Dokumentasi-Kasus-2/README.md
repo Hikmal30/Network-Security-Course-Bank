@@ -45,7 +45,7 @@ Output pada screenshot:
 
 Hal ini memperlihatkan bahwa data berada pada Docker volume, bukan hanya pada lapisan filesystem container yang sebelumnya digunakan.
 
-![Bukti pembuatan Docker volume dan file](Dokumentasi-Kasus-2/Pertemuan1/pertemuan-1-docker-volume.png)
+![Bukti pembuatan Docker volume dan file](Dokumentasi-Kasus-2/Pertemuan1/Screenshot_2026-11-13_03_50_52.png)
 
 ### 1.3 Menguji layanan Nginx
 
