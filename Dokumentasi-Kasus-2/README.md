@@ -1,6 +1,6 @@
 # Dokumentasi Praktikum Keamanan Jaringan – Kasus 2
 
-Dokumen ini merangkum bukti terminal dari beberapa pertemuan praktikum berdasarkan screenshot yang dilampirkan. Screenshot disimpan di folder `images` dan ditampilkan langsung menggunakan tautan relatif agar dapat dibaca ketika folder ini dibuka melalui GitHub.
+Dokumen ini merangkum bukti terminal dari beberapa pertemuan praktikum berdasarkan screenshot yang dilampirkan. Screenshot disimpan di folder `Pertemuan1` sampai `Pertemuan7` dan ditampilkan menggunakan tautan relatif dari `Dokumentasi-Kasus-2/README.md`.
 
 > **Catatan penting:** Dokumentasi Pertemuan 4 menggunakan hasil capture jaringan Wi-Fi milik pribadi, bukan file `.cap` yang disediakan dosen. Hasil pengujian Aircrack-ng adalah `KEY NOT FOUND`. Dokumentasi ini tidak menyatakan bahwa password berhasil ditemukan.
 
@@ -45,7 +45,7 @@ Output pada screenshot:
 
 Hal ini memperlihatkan bahwa data berada pada Docker volume, bukan hanya pada lapisan filesystem container yang sebelumnya digunakan.
 
-![Bukti pembuatan Docker volume dan file](Dokumentasi-Kasus-2/Pertemuan1/Screenshot_2026-11-13_03_50_52.png)
+![Bukti pembuatan Docker volume dan file](Pertemuan1/Screenshot_2026-11-13_03_50_52.png)
 
 ### 1.3 Menguji layanan Nginx
 
@@ -57,7 +57,7 @@ docker compose -p k2 -f b/b1-compose/docker-compose.yml exec attacker wget -qO- 
 
 Output halaman Nginx menunjukkan bahwa layanan web pada container target dapat dijangkau dari container attacker di lingkungan lab.
 
-(Dokumentasi-Kasus-2/Pertemuan1/Screenshot_2026-11-13_03_54_58.png)
+(Pertemuan1/Screenshot_2026-11-13_03_54_58.png)
 
 ---
 
@@ -107,7 +107,7 @@ issuer=CN=k2.exfil.lab
 
 Karena sertifikat dibuat secara self-signed, nilai subject dan issuer sama. Screenshot juga memperlihatkan waktu mulai dan berakhir masa berlaku sertifikat.
 
-![Bukti hash SHA-256 dan pembuatan sertifikat](Dokumentasi-Kasus-2/Pertemuan2/pertemuan-2-hash-dan-sertifikat.png)
+![Bukti hash SHA-256 dan pembuatan sertifikat](Pertemuan2/Screenshot_2026-11-24_15_10_49.png)
 
 **Catatan keamanan:** Jangan mengunggah `key-k2.pem` ke repositori publik. File tersebut merupakan private key. Simpan hanya di lingkungan lokal yang aman.
 
@@ -155,9 +155,9 @@ Setelah perintah tersebut dijalankan, tabel ARP kembali menunjukkan MAC address 
 
 Dengan demikian, screenshot mendokumentasikan perubahan pemetaan ARP selama simulasi dan pemulihan pemetaan melalui static ARP.
 
-![Bukti tahap awal simulasi ARP](Dokumentasi-Kasus-2/Pertemuan3/pertemuan-3-arp-awal.png)
+![Bukti tahap awal simulasi ARP](Pertemuan3/Screenshot_2026-11-13_04_49_51.png)
 
-![Bukti pemulihan pemetaan ARP](Dokumentasi-Kasus-2/Pertemuan3/pertemuan-3-arp-mitigasi.png)
+![Bukti pemulihan pemetaan ARP](Pertemuan3/Screenshot_2026-11-24_14_25_40.png)
 
 ---
 
@@ -210,7 +210,7 @@ Pengujian analisis WPA/WPA2 dilakukan terhadap capture dari jaringan pribadi. Ai
 
 Dengan demikian, hasil praktikum yang dilaporkan adalah **handshake terdeteksi, tetapi password tidak berhasil ditemukan menggunakan wordlist yang diuji**.
 
-![Bukti analisis capture pribadi dengan hasil KEY NOT FOUND](Dokumentasi-Kasus-2/Pertemuan4/pertemuan-4-aircrack-key-not-found.png)
+![Bukti analisis capture pribadi dengan hasil KEY NOT FOUND](Pertemuan4/WhatsApp%20Image%202026-11-25%20at%2004.57.24.jpeg)
 
 ---
 
@@ -236,7 +236,7 @@ Tipe ICMP balasan: 0
 
 Tipe ICMP balasan `0` merupakan Echo Reply. Nilai TTL balasan yang terlihat adalah `64`. Berdasarkan output tersebut, pengiriman ICMP dan penerimaan balasan berhasil pada pengujian yang ditampilkan.
 
-![Bukti pengiriman ICMP menggunakan Scapy](Dokumentasi-Kasus-2/Pertemuan5/pertemuan-5-icmp-scapy.png)
+![Bukti pengiriman ICMP menggunakan Scapy](Pertemuan5/Screenshot_2026-11-13_06_23_13.png)
 
 
 ---
@@ -263,7 +263,7 @@ exec target netstat -ant
 
 Pada output tersebut, layanan TCP terlihat dalam keadaan `LISTEN`, termasuk pada alamat `0.0.0.0:80`.
 
-![Bukti pemeriksaan SYN_RECV dan port listening](Dokumentasi-Kasus-2/Pertemuan6/pertemuan-6-syn-flood-netstat.png)
+![Bukti pemeriksaan SYN_RECV dan port listening](Pertemuan6/Screenshot_2026-11-24_14_37_44.png)
 
 ### 6.2 Memastikan tools pada container attacker
 
@@ -302,7 +302,7 @@ Output `tcpdump` memperlihatkan urutan paket TCP:
 
 Urutan SYN → SYN-ACK → ACK pada screenshot menjadi bukti visual proses **three-way handshake** sebelum pertukaran data HTTP.
 
-![Bukti three-way handshake dan trafik HTTP dari tcpdump](Dokumentasi-Kasus-2/Pertemuan6/pertemuan-6-three-way-handshake-tcpdump.png)
+![Bukti three-way handshake dan trafik HTTP dari tcpdump](Pertemuan6/Screenshot_2026-11-24_14_37_49.png)
 
 ---
 
@@ -387,7 +387,7 @@ Hasil yang terlihat:
 
 Dengan demikian, screenshot mendokumentasikan alur pengiriman data uji melalui label subdomain, pencatatan query pada log DNS, deteksi label panjang yang mengandung karakter hex, dan decoding kembali menjadi nilai awal.
 
-![Bukti DNS exfiltration dan hasil decoding](Dokumentasi-Kasus-2/Pertemuan7/pertemuan-7-dns-exfiltration.png)
+![Bukti DNS exfiltration dan hasil decoding](Pertemuan7/Screenshot_2026-11-24_14_59_20.png)
 
 ---
 
@@ -407,7 +407,7 @@ Dengan demikian, screenshot mendokumentasikan alur pengiriman data uji melalui l
 
 ## Catatan sebelum mengunggah ke GitHub
 
-1. Pastikan folder `images` ikut diunggah bersama file `README.md`. Jika hanya README yang diunggah, gambar tidak akan tampil.
+1. Pastikan folder `Pertemuan1` sampai `Pertemuan7` dan seluruh file screenshot ikut diunggah bersama `README.md`.
 2. Jangan mengunggah private key seperti `key-k2.pem`.
 3. Periksa screenshot sebelum dipublikasikan. Screenshot dapat memuat identitas jaringan, alamat MAC, SSID, alamat IP, atau informasi pribadi. Samarkan bagian yang tidak ingin dibagikan.
 4. Untuk Pertemuan 4, jelaskan bahwa capture berasal dari jaringan pribadi dan hasilnya `KEY NOT FOUND`. Jangan mengubah laporan menjadi klaim bahwa password berhasil ditemukan.
