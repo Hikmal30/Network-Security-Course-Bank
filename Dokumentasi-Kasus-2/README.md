@@ -172,125 +172,35 @@ pemantauan perubahan pemetaan IP--MAC.
 
 ------------------------------------------------------------------------
 
-## Pertemuan 4 --- Analisis WPA/WPA2 Handshake
+### Pertemuan 4 – Analisis WPA/WPA2 Handshake
 
-### Tujuan dan konsep
+**Tujuan Praktikum**
 
-Praktikum ini mempelajari autentikasi Wi-Fi WPA/WPA2-PSK. Saat client
-terhubung ke access point, keduanya melakukan **four-way handshake**
-untuk membuktikan kepemilikan rahasia bersama dan membentuk kunci sesi.
+Mempelajari proses autentikasi WPA/WPA2 melalui analisis paket handshake menggunakan Aircrack-ng.
 
-Capture handshake dapat digunakan untuk audit kata sandi secara offline.
-Alat audit membandingkan kandidat dari wordlist dengan informasi
-autentikasi dalam capture. Pengujian hanya boleh dilakukan pada access
-point milik sendiri atau jaringan yang secara eksplisit mengizinkan
-pengujian.
+**Metode Pengujian**
 
-### Langkah praktikum
+Pada praktikum ini, pengujian dilakukan menggunakan file hasil capture jaringan Wi-Fi milik pribadi, bukan menggunakan file `.cap` yang disediakan oleh dosen.
 
-1.  Pastikan jaringan target merupakan jaringan lab atau jaringan yang
-    diizinkan.
-2.  Siapkan adapter Wi-Fi yang mendukung mode monitor.
-3.  Identifikasi interface dan kanal access point yang diuji.
-4.  Tangkap proses koneksi client yang sah hingga handshake tercatat.
-5.  Periksa file capture untuk memastikan target dan handshake
-    terdeteksi.
-6.  Siapkan wordlist uji yang diizinkan.
-7.  Jalankan analisis offline dengan Aircrack-ng.
-8.  Catat status hasilnya tanpa menyebarkan kata sandi sebenarnya.
+File capture tersebut kemudian dianalisis menggunakan Aircrack-ng dengan wordlist yang tersedia untuk menguji apakah kata sandi jaringan dapat ditemukan.
 
-Contoh perintah analisis offline:
+**Hasil Pengujian**
 
-``` bash
-aircrack-ng -w wordlist-k2.txt handshake-k2-01.cap
-```
+Berdasarkan hasil analisis Aircrack-ng, diperoleh keterangan:
 
-### Hasil dan analisis
+`KEY NOT FOUND`
 
-Pada bukti praktikum, Aircrack-ng membaca file capture, mengenali satu
-jaringan target dengan satu handshake, lalu menguji kandidat dalam
-wordlist. Terminal menunjukkan bahwa salah satu kandidat cocok. Kata
-sandi yang ditemukan sengaja tidak dicantumkan dalam dokumentasi ini.
+Hasil tersebut menunjukkan bahwa Aircrack-ng tidak berhasil menemukan kata sandi jaringan berdasarkan file capture dan wordlist yang digunakan.
 
-Hasil ini memperlihatkan bahwa kata sandi yang lemah atau mudah ditebak
-berisiko ditemukan melalui pengujian offline jika capture handshake
-diperoleh pihak yang tidak berwenang.
+Kondisi ini dapat terjadi karena kata sandi tidak terdapat dalam wordlist atau file capture belum memuat handshake yang valid dan lengkap.
 
-### Kesimpulan
+**Kesimpulan**
 
-Gunakan kata sandi Wi-Fi yang panjang, unik, dan sulit ditebak. Aktifkan
-WPA2-AES atau WPA3 jika tersedia, perbarui firmware access point, dan
-jangan membagikan capture maupun kredensial secara terbuka. Hindari
-deauthentication atau pengujian terhadap pengguna/jaringan tanpa izin.
+Praktikum berhasil dilakukan pada tahap pengambilan dan analisis file capture jaringan pribadi. Namun, proses pencarian kata sandi belum berhasil karena menghasilkan `KEY NOT FOUND`.
 
+Hasil ini menunjukkan bahwa keberhasilan pencarian kata sandi WPA/WPA2 tidak hanya bergantung pada penggunaan Aircrack-ng, tetapi juga pada validitas file capture dan kesesuaian wordlist yang digunakan.
 
-### Penyesuaian konfigurasi Docker untuk lab wireless
-
-Saat menjalankan `docker-compose-p4.yml` dari direktori `Labs`, ditemukan
-dua jenis konflik Docker. Pertama, subnet `192.168.100.0/24` sudah
-digunakan oleh network `wifi-lab_wireless-lab`. Kedua, nama container
-`kali-wireless-lab` dan `monitor-wireless` telah digunakan oleh container
-dari praktikum lain.
-
-Untuk menghindari konflik tanpa menghapus network atau container
-praktikum sebelumnya, konfigurasi Pertemuan 4 disesuaikan sebagai berikut:
-
-- Subnet network `wireless-lab` diubah dari `192.168.100.0/24` menjadi
-  `192.168.110.0/24`, setelah pemeriksaan daftar network menunjukkan
-  subnet tersebut belum digunakan.
-- Nama container service Kali diubah menjadi `kali-wireless-p4`.
-- Nama container service monitor diubah menjadi `monitor-wireless-p4`.
-- Nama service Compose tetap dipertahankan. Yang diubah hanya nilai
-  `container_name` dan subnet pada konfigurasi network.
-
-Contoh bagian konfigurasi yang disesuaikan:
-
-```yaml
-services:
-  kali-wireless-lab:
-    container_name: kali-wireless-p4
-
-  monitor-wireless:
-    container_name: monitor-wireless-p4
-
-networks:
-  wireless-lab:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.110.0/24
-```
-
-Jalankan perintah dari direktori `Labs`:
-
-```bash
-docker compose -f docker-compose-p4.yml up -d
-```
-
-Periksa container yang berkaitan dengan lab wireless:
-
-```bash
-docker ps -a --filter "name=wireless-p4"
-```
-
-Periksa subnet network yang dibuat:
-
-```bash
-docker network inspect labs_wireless-lab \
-  --format '{{.Name}}: {{range .IPAM.Config}}{{.Subnet}}{{end}}'
-```
-
-Konfigurasi tersebut ditujukan untuk menghindari benturan nama dan
-alamat jaringan dengan praktikum lain. Jangan menghapus container atau
-network lama hanya untuk mengatasi konflik, karena resource tersebut
-mungkin masih digunakan oleh praktikum sebelumnya.
-
-**Status verifikasi:** perubahan subnet dan nama container merupakan
-penyesuaian konfigurasi. Praktikum baru dapat dinyatakan berhasil
-dijalankan setelah `docker compose up -d` selesai tanpa error dan
-container `kali-wireless-p4` serta `monitor-wireless-p4` terverifikasi
-berjalan.
-
+**Catatan:** Pengujian dilakukan pada jaringa WiFi milik pribadi dengan tujuan pembelajaran dan analisis keamanan jaringan.
 ------------------------------------------------------------------------
 
 ## Pertemuan 5 --- Pengiriman dan Analisis ICMP dengan Scapy
