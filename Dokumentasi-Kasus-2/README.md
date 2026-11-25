@@ -1,3 +1,4 @@
+[README-Kasus-2-updated.md](https://github.com/user-attachments/files/35399496/README-Kasus-2-updated.md)
 # Dokumentasi Praktikum Keamanan Jaringan --- Kasus 2
 
 README ini merangkum praktikum **Kasus 2 (K2), Pertemuan 1--7**. Folder
@@ -221,6 +222,74 @@ Gunakan kata sandi Wi-Fi yang panjang, unik, dan sulit ditebak. Aktifkan
 WPA2-AES atau WPA3 jika tersedia, perbarui firmware access point, dan
 jangan membagikan capture maupun kredensial secara terbuka. Hindari
 deauthentication atau pengujian terhadap pengguna/jaringan tanpa izin.
+
+
+### Penyesuaian konfigurasi Docker untuk lab wireless
+
+Saat menjalankan `docker-compose-p4.yml` dari direktori `Labs`, ditemukan
+dua jenis konflik Docker. Pertama, subnet `192.168.100.0/24` sudah
+digunakan oleh network `wifi-lab_wireless-lab`. Kedua, nama container
+`kali-wireless-lab` dan `monitor-wireless` telah digunakan oleh container
+dari praktikum lain.
+
+Untuk menghindari konflik tanpa menghapus network atau container
+praktikum sebelumnya, konfigurasi Pertemuan 4 disesuaikan sebagai berikut:
+
+- Subnet network `wireless-lab` diubah dari `192.168.100.0/24` menjadi
+  `192.168.110.0/24`, setelah pemeriksaan daftar network menunjukkan
+  subnet tersebut belum digunakan.
+- Nama container service Kali diubah menjadi `kali-wireless-p4`.
+- Nama container service monitor diubah menjadi `monitor-wireless-p4`.
+- Nama service Compose tetap dipertahankan. Yang diubah hanya nilai
+  `container_name` dan subnet pada konfigurasi network.
+
+Contoh bagian konfigurasi yang disesuaikan:
+
+```yaml
+services:
+  kali-wireless-lab:
+    container_name: kali-wireless-p4
+
+  monitor-wireless:
+    container_name: monitor-wireless-p4
+
+networks:
+  wireless-lab:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.110.0/24
+```
+
+Jalankan perintah dari direktori `Labs`:
+
+```bash
+docker compose -f docker-compose-p4.yml up -d
+```
+
+Periksa container yang berkaitan dengan lab wireless:
+
+```bash
+docker ps -a --filter "name=wireless-p4"
+```
+
+Periksa subnet network yang dibuat:
+
+```bash
+docker network inspect labs_wireless-lab \
+  --format '{{.Name}}: {{range .IPAM.Config}}{{.Subnet}}{{end}}'
+```
+
+Konfigurasi tersebut ditujukan untuk menghindari benturan nama dan
+alamat jaringan dengan praktikum lain. Jangan menghapus container atau
+network lama hanya untuk mengatasi konflik, karena resource tersebut
+mungkin masih digunakan oleh praktikum sebelumnya.
+
+**Status verifikasi:** perubahan subnet dan nama container merupakan
+penyesuaian konfigurasi. Praktikum baru dapat dinyatakan berhasil
+dijalankan setelah `docker compose up -d` selesai tanpa error dan
+container `kali-wireless-p4` serta `monitor-wireless-p4` terverifikasi
+berjalan.
 
 ------------------------------------------------------------------------
 
