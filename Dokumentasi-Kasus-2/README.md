@@ -57,7 +57,7 @@ docker compose -p k2 -f b/b1-compose/docker-compose.yml exec attacker wget -qO- 
 
 Output halaman Nginx menunjukkan bahwa layanan web pada container target dapat dijangkau dari container attacker di lingkungan lab.
 
-![Bukti akses halaman Nginx dari container attacker](Dokumentasi-Kasus-2/Pertemuan1/Screenshot_2026-11-13_03_54_58.png)
+(Dokumentasi-Kasus-2/Pertemuan1/Screenshot_2026-11-13_03_54_58.png)
 
 ---
 
